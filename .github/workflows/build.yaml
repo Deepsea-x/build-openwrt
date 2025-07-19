@@ -74,12 +74,15 @@ jobs:
           cd openwrt || exit
 
           # 添加 ssrp 源
-          echo "src-git ssrp https://github.com/fw876/helloworld.git" >>./feeds.conf.default
+          sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
+          sed -i '$a src-git small https://github.com/kenzok8/small' feeds.conf.default
+          # echo "src-git ssrp https://github.com/fw876/helloworld.git" >>./feeds.conf.default
           # echo "src-git ssrp https://github.com/jiaopengzi/helloworld.git;update-xray-core" >>./feeds.conf.default
 
 
           # 更新软件包 & 安装依赖,出现 warning 信息不影响编译
           echo "======================================== 更新软件包"
+          
           ./scripts/feeds update -a
 
       - name: 4. 安装编译依赖
@@ -137,8 +140,8 @@ jobs:
           pwd
 
           echo "======================================== 版本:$KERNEL_VERSION 开始编译固件"
-          make -j"$(nproc)"
-          # make V=s -j1
+          make V=s -j1
+          #  make -j"$(nproc)"
 
           echo "======================================== 版本:$KERNEL_VERSION 编译完成"
 
